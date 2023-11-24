@@ -1,0 +1,62 @@
+<!-- dwitter/templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <title>Dwitter</title>
+</head>
+<body>
+    <section class="hero is-small is-success mb-4">
+        <div class="hero-body">
+            <h1 class="title is-1">Dwitter</h1>
+            <p class="subtitle is-4">
+                Your tiny social network built with Django
+            </p>
+        </div>
+    </section>
+    {% block content %}
+    <div class="container">
+        <div class="column">
+                {% for dweet in dweet_list %}
+                    <div class="box">
+                        {{ dweet.body }}
+                        <span class="is-small has-text-grey-light">
+                            <br>
+                            {{edited}}
+                            {% if dweet.num_of_edit %}
+                                Edited at {{ dweet.edited_at }} by {{ dweet.user.username }}
+                            {% else %}
+                                {{ dweet.created_at }} by {{ dweet.user.username }}
+                            {% endif %}
+                            <br>
+                            <a href="{% url 'dweet_delete' dweet.id %}">
+                            <button style="color: red;">Delete</button>
+                            </a>
+                            <a href="{% url 'dweet_update' dweet.id %}">
+                            <button style="color: green;">Update</button>
+                            </a>
+                        </span>
+                    </div>
+            {% endfor %}
+
+        </div>
+    
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button is-success is-fullwidth is-medium mt-5"
+                    type="submit">Dweet
+            </button>
+        </form>
+    
+
+    
+
+</body>
+</html>
+{% endblock %}
